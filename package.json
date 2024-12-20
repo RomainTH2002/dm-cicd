@@ -11,6 +11,9 @@
     "lint": "eslint ./src",
     "test": "jest"
   },
+  "bin": {
+    "vehicle-cli": "./vehicle-cli.js"
+  },
   "author": "rt",
   "license": "ISC",
   "devDependencies": {
