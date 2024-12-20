@@ -7,10 +7,8 @@ const axios = require('axios');
 const program = new Command();
 
 // Fonction pour créer un véhicule
-const createVehicle = async (shortcode, battery, longitude, latitude) => {
+const createVehicle = async (shortcode, battery, longitude, latitude, address) => {
   try {
-    const address = 'http://localhost:8080';
-
     const response = await axios.post(`${address}/vehicles`, {
       shortcode,
       battery,
@@ -39,6 +37,10 @@ const createVehicle = async (shortcode, battery, longitude, latitude) => {
 // Fonction pour lister les véhicules
 const listVehicles = async (address) => {
   try {
+    if (!address.startsWith('http://') && !address.startsWith('https://')) {
+      address = `http://${address}`;
+    }
+
     const response = await axios.get(`${address}/vehicles`);
     const vehicles = response.data.vehicles;
 
@@ -61,10 +63,14 @@ const listVehicles = async (address) => {
   }
 };
 
-// Commande pour créer un véhicule
+// Définition d'une option globale pour l'adresse
 program
   .version('1.0.0')
   .description('Vehicle CLI to manage vehicles')
+  .option('--address <address>', 'Server address (e.g., http://localhost:8080)', 'http://localhost:8080');
+
+// Commande pour créer un véhicule
+program
   .command('create-vehicle')
   .description('Create a new vehicle')
   .requiredOption('--shortcode <shortcode>', 'Shortcode of the vehicle')
@@ -72,6 +78,13 @@ program
   .requiredOption('--longitude <longitude>', 'Longitude of the vehicle')
   .requiredOption('--latitude <latitude>', 'Latitude of the vehicle')
   .action((cmd) => {
+    const opts = program.opts();
+    let address = opts.address;
+
+    if (!address.startsWith('http://') && !address.startsWith('https://')) {
+      address = `http://${address}`;
+    }
+
     const battery = parseInt(cmd.battery);
     const longitude = parseFloat(cmd.longitude);
     const latitude = parseFloat(cmd.latitude);
@@ -81,16 +94,22 @@ program
       process.exit(1);
     }
 
-    createVehicle(cmd.shortcode, battery, longitude, latitude);
+    createVehicle(cmd.shortcode, battery, longitude, latitude, address);
   });
 
 // Commande pour lister les véhicules
 program
   .command('list-vehicles')
   .description('List all vehicles')
-  .requiredOption('--address <address>', 'Server address (e.g., http://localhost:8080)')
-  .action((cmd) => {
-    listVehicles(cmd.address);
+  .action(() => {
+    const opts = program.opts();
+    let address = opts.address;
+
+    if (!address.startsWith('http://') && !address.startsWith('https://')) {
+      address = `http://${address}`;
+    }
+
+    listVehicles(address);
   });
 
 // Lancer le programme CLI
