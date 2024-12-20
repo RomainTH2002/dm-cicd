@@ -19,19 +19,20 @@ const createVehicle = async (shortcode, battery, longitude, latitude, address) =
     console.log(`Created vehicle \`${shortcode}\`, with ID \`${response.data.vehicle.id}\``);
   } catch (error) {
     if (error.response) {
+      
       const errorData = error.response.data;
-      console.error('Error creating vehicle:', errorData.error.message);
-
-      if (errorData.error.violations) {
-        console.log('Validation errors:');
-        errorData.error.violations.forEach((violation) => {
+      if (errorData.error?.details?.violations && Array.isArray(errorData.error.details.violations)) {
+        errorData.error.details.violations.forEach((violation) => {
           console.log(`- ${violation}`);
         });
+      } else {
+        console.error('No violations array or invalid structure in the error response.');
       }
     } else {
       console.error('Error creating vehicle:', error.message);
     }
   }
+  
 };
 
 // Fonction pour lister les véhicules
@@ -50,13 +51,13 @@ const listVehicles = async (address) => {
       console.log('List of vehicles:');
       vehicles.forEach((vehicle) => {
         console.log(
-          `- ID: ${vehicle.id}, Shortcode: ${vehicle.shortcode}, Battery: ${vehicle.battery}, Location: (${vehicle.longitude}, ${vehicle.latitude})`
+          `- ID: ${vehicle.id}, Shortcode: ${vehicle.shortcode}, Battery: ${vehicle.battery}, Location: (${vehicle.position.longitude}, ${vehicle.position.latitude})`
         );
       });
     }
   } catch (error) {
     if (error.response) {
-      console.error('Error fetching vehicles:', error.response.data.error.message);
+      console.error('Error fetching vehicles:', error.response.data.error?.message || 'Unknown error.');
     } else {
       console.error('Error fetching vehicles:', error.message);
     }
