@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { createVehicle } = require('./path-to-your-script');
+const { createVehicle } = require('./vehicle-cli.js');
 const MockAdapter = require('axios-mock-adapter');
 
 // Création d'un mock d'axios
