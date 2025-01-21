@@ -60,3 +60,11 @@ vehicle-cli list-vehicles
 
 Cette commande retournera une liste des véhicules enregistrés avec leurs informations.
 
+
+### Supprimer un véhicule
+Pour supprimer un véhicule de votre liste :
+
+```bash
+vehicle-cli delete-vehicle id
+```
+
