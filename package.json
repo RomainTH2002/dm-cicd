@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
-    "start": "npm run build && node dist/index.js",
-    "start-db": "docker container run -d -name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
+    "start": "npm run build && node dist/index.js && npm link",
+    "start-db": "docker container run -d --name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
     "stop-db": "docker container rm -f vehicle-database",
     "lint": "eslint ./src",
     "test": "jest"
+  },
+  "bin": {
+    "vehicle-cli": "./bin/vehicle-cli.js"
   },
   "author": "rt",
   "license": "ISC",
@@ -29,6 +32,8 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "@types/pg": "^8.11.10",
+    "axios": "^1.7.9",
+    "commander": "^12.1.0",
     "express": "^5.0.1",
     "pg": "^8.13.1"
   }
