@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node dist/index.js && npm link",
     "start-db": "docker container run -d --name vehicle-database -e POSTGRES_USER=vehicle -e POSTGRES_PASSWORD=vehicle -e POSTGRES_DB=vehicle -p 5432:5432 postgis/postgis:16-3.4-alpine",
     "stop-db": "docker container rm -f vehicle-database",
     "lint": "eslint ./src",
     "test": "jest"
   },
   "bin": {
-    "vehicle-cli": "./vehicle-cli.js"
+    "vehicle-cli": "./bin/vehicle-cli.js"
   },
   "author": "rt",
   "license": "ISC",
