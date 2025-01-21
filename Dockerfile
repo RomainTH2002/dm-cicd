@@ -10,5 +10,5 @@ WORKDIR /app
 COPY ./package.json ./package-lock.json .
 RUN npm install --production
 COPY --from=build /app/dist /app/dist
-
+RUN npm link
 ENTRYPOINT ["node", "/app/dist/index.js"]
